@@ -46,4 +46,5 @@ def predict_datapoint():
         return render_template('home.html', results=results[0])
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5001, debug=False, threaded=True)
+    free_port = find_free_port()
+    app.run(host="0.0.0.0", port=free_port, debug=False, threaded=True)
