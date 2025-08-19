@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Student Exam Performance Indicator</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+  body {
+    background: #0d0d0d; /* Dark background */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #fff;
+  }
+
+  .card {
+    border-radius: 1.5rem;
+    background: #1a1a1a;
+    box-shadow: 0 20px 40px rgba(108, 99, 255, 0.3), 0 0 60px rgba(108, 99, 255, 0.2) inset;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    perspective: 1000px;
+  }
+  .card:hover {
+    transform: translateY(-10px) rotateX(3deg) rotateY(3deg);
+    box-shadow: 0 25px 50px rgba(108, 99, 255, 0.5), 0 0 80px rgba(108, 99, 255, 0.3) inset;
+  }
+
+  h1, h2, h3 {
+    font-weight: 700;
+    color: #6c63ff;
+    text-shadow: 0 0 10px rgba(108, 99, 255, 0.7);
+  }
+
+  .form-floating>.form-control, .form-floating>.form-select {
+    border-radius: 1rem;
+    background: #222;
+    color: #fff;
+  }
+  .form-floating>.form-control:focus, .form-floating>.form-select:focus {
+    border-color: #6c63ff;
+    box-shadow: 0 0 10px rgba(108, 99, 255, 0.6);
+    background: #222;
+    color: #fff;
+  }
+
+  .form-floating>label {
+    color: #ccc;
+    text-shadow: 0 0 5px rgba(108, 99, 255, 0.5);
+  }
+
+  .btn-primary {
+    background: linear-gradient(90deg, #6c63ff, #574fd6);
+    border: none;
+    font-weight: 600;
+    transition: 0.4s;
+    box-shadow: 0 5px 15px rgba(108, 99, 255, 0.5);
+  }
+  .btn-primary:hover {
+    background: linear-gradient(90deg, #574fd6, #6c63ff);
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px rgba(108, 99, 255, 0.7);
+  }
+
+  .result-card {
+    margin-top: 25px;
+    perspective: 1000px;
+  }
+
+  .result-inner {
+    background: #222;
+    border-left: 6px solid #6c63ff;
+    border-radius: 1rem;
+    padding: 20px;
+    font-weight: 600;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(108, 99, 255, 0.5) inset;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+  }
+
+  .result-progress {
+    height: 25px;
+    border-radius: 1rem;
+    overflow: hidden;
+    background: rgba(108, 99, 255, 0.1);
+    margin-top: 15px;
+  }
+
+  .progress-bar {
+    background: linear-gradient(90deg, #6c63ff, #574fd6);
+    height: 100%;
+    width: 0%;
+    transition: width 1.5s ease-in-out;
+  }
+
+</style>
+</head>
+<body>
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10">
+      <div class="card p-4">
+        <h1 class="text-center mb-3"><i class="bi bi-mortarboard"></i> Student Exam Predictor</h1>
+        <h2 class="text-center mb-4">Enter details to Predict Math Score</h2>
+
+        <form action="{{ url_for('predict_datapoint')}}" method="post">
+          <div class="row g-3">
+
+            <div class="col-md-6">
+              <div class="form-floating">
+                <select class="form-select" id="gender" name="gender" required>
+                  <option selected disabled value="">Gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
+                <label for="gender"><i class="bi bi-gender"></i> Gender</label>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-floating">
+                <select class="form-select" id="race_ethnicity" name="race/ethnicity" required>
+                  <option selected disabled value="">Ethnicity</option>
+                  <option value="group A">Group A</option>
+                  <option value="group B">Group B</option>
+                  <option value="group C">Group C</option>
+                  <option value="group D">Group D</option>
+                  <option value="group E">Group E</option>
+                </select>
+                <label for="race_ethnicity"><i class="bi bi-people"></i> Race / Ethnicity</label>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-floating">
+                <select class="form-select" id="Education" name="parental_level_of_education" required>
+                  <option selected disabled value="">Parental Education</option>
+                  <option value="associate's degree">Associate's Degree</option>
+                  <option value="bachelor's degree">Bachelor's Degree</option>
+                  <option value="high school">High School</option>
+                  <option value="master's degree">Master's Degree</option>
+                  <option value="some college">Some College</option>
+                  <option value="some high school">Some High School</option>
+                </select>
+                <label for="Education"><i class="bi bi-book"></i> Parental Education</label>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-floating">
+                <select class="form-select" id="lunch" name="lunch" required>
+                  <option selected disabled value="">Lunch Type</option>
+                  <option value="free/reduced">Free/Reduced</option>
+                  <option value="standard">Standard</option>
+                </select>
+                <label for="lunch"><i class="bi bi-cup-straw"></i> Lunch Type</label>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-floating">
+                <select class="form-select" id="test_preparation_course" name="test_preparation_course" required>
+                  <option selected disabled value="">Test Prep Course</option>
+                  <option value="none">None</option>
+                  <option value="completed">Completed</option>
+                </select>
+                <label for="test_preparation_course"><i class="bi bi-journal-text"></i> Test Prep</label>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="number" class="form-control" id="writing_score" name="writing_score" min="0" max="100" placeholder="Writing Score" required>
+                <label for="writing_score"><i class="bi bi-pencil-square"></i> Writing Score</label>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="number" class="form-control" id="reading_score" name="reading_score" min="0" max="100" placeholder="Reading Score" required>
+                <label for="reading_score"><i class="bi bi-book-half"></i> Reading Score</label>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="d-grid mt-4">
+            <button type="submit" class="btn btn-primary btn-lg"><i class="bi bi-lightning-charge"></i> Predict Score</button>
+          </div>
+        </form>
+
+        {% if results is not none %}
+        <div class="result-card">
+          <div class="result-inner">
+            <h3><i class="bi bi-graph-up"></i> Predicted Math Score: {{ results }}</h3>
+            <div class="result-progress">
+              <div class="progress-bar" id="score-bar"></div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% if results is not none %}
+<script>
+  // Animate the progress bar  
+  var progress = document.getElementById('score-bar');
+  var value =  Number("{{ results }}");; // safely convert to JS
+  value = Math.min(Math.max(value, 0), 100); // clamp between 0-100
+  progress.style.width = value + '%';
+</script>
+{% endif %}
+
+</body>
+</html>
